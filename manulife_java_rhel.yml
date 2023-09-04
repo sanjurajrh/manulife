@@ -1,0 +1,79 @@
+---
+- hosts: all
+  tasks: 
+   - name: Install java in redhat server
+     when: ansible_os_family == "RedHat"
+     ansible.builtin.package:
+       name: java-11-openjdk
+       state: present
+
+
+   - name: check current version of java
+     ansible.builtin.command: java -version
+     register: java_version
+     
+   - name: Show current Java version 
+     ansible.builtin.debug:
+       msg: "{{ java_version }}"
+ 
+   - name: Copy Jenkins archive package to managed hosts
+     ansible.builtin.copy:
+      src: ./jenkins-1.409.1-1.1.noarch.rpm.tar.gz
+      dest: /var/
+
+   - name: extracting the Jenkins archive package
+     ansible.builtin.unarchive:
+      src: /var/jenkins-1.409.1-1.1.noarch.rpm.tar.gz
+      dest: /var/
+      remote_src: yes
+
+   - name: Install Jenkins rpm 
+     ansible.builtin.command: yum localinstall /var/jenkins-1.409.1-1.1.noarch.rpm -y 
+
+
+   - name: Start jenkins service
+     ansible.builtin.service:
+       name: jenkins.service
+       state: started
+       enabled: true 
+     register: service_stat
+
+
+   - name: debug the service status 
+     debug:
+        var: service_stat
+
+
+
+  # process to patch Java 
+   - name: Stop Javapjdk depended service(s) 
+     ansible.builtin.service:
+       name: jenkins.service
+       state: stopped
+
+   - name: Patch - update java Jdk packages     
+     ansible.builtin.package:
+       name: java-17-openjdk
+       state: present
+      
+  
+   - name: Verify the updated version of JDK
+     ansible.builtin.command: java -version
+     register: java_patch
+     
+   - name: Show uppdated JDK version 
+     ansible.builtin.debug:
+       msg: "{{ java_patch }}"
+
+
+   - name: Start Javapjdk depended service(s) 
+     ansible.builtin.service:
+       name: jenkins.service
+       state: started
+       enabled: true 
+     register: service_update
+
+
+   - name: verify the service is running after JDK patching 
+     debug:
+       var: service_update.state 
