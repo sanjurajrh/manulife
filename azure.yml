@@ -1,0 +1,6 @@
+---
+- hosts: localhost
+  tasks:
+   - azure_rm_resourcegroup:
+       name: manulife_test
+       location: centralindia
