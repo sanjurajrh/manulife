@@ -1,0 +1,34 @@
+---
+  - name: Change VM size
+    hosts: localhost
+    vars:
+       resource_group_name: myResourceGroup
+       vm_name: myVM
+       your_username: azureuser
+       your_password: redhat123@!
+       azure_disk_size: 40
+    
+    tasks:
+    
+    - name: "Power off the machine"
+      azure_rm_virtualmachine:
+        resource_group: "{{ resource_group_name }}"
+        name: "{{ vm_name }}"
+        allocated: no
+    
+    
+    - name: Update VM
+      azure_rm_virtualmachine:
+        resource_group: "{{ resource_group_name }}"
+        name: "{{vm_name}}"
+        vm_size: Standard_DS2_v2
+        admin_username: "{{ your_username }}"
+        admin_password: "{{ your_password }}"
+        started: yes
+
+    - name: "Increase disk size"
+      azure_rm_managed_disk:
+        name: "{{ vm_name }}"
+        resource_group: "{{ resource_group_name }}"
+        disk_size_gb: "{{ azure_disk_size }}"
+        managed_by: "{{ vm_name }}"
