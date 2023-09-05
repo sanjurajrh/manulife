@@ -1,0 +1,46 @@
+---
+- name: Middleware - Java Patching Windoes
+  hosts: win1
+
+  tasks:
+  - name: Install JDKv17 
+    win_chocolatey:
+      name: oracle17jdk
+      state: present 
+
+  - name: Copy Java-JDK-file to Managed Hosts
+    win_copy: 
+      src: ./jdk-20_windows-x64_bin.msi
+      dest: c:\
+
+  - name: Install Java 
+    win_package:
+      path: c:\jdk-20_windows-x64_bin.msi
+      state: present
+    register: jdk_verify
+
+  - name: Verify the installation process
+    debug:
+      var: jdk_verify   
+
+  - win_chocolatey:
+        name: procexp   
+        state: present
+  
+  #patch Java-Jadk application 
+
+  - name: Stop Java-Jdk Depended application 
+    win_service:
+      name: "{{ service_name }}"
+      state: stopped 
+
+  - name: patch/update current package 
+    win_chocolatey:
+        name: jdk20 
+        state: present 
+
+  - name: Restart Java-Jdk Depended application 
+    win_service:
+      name: "{{ service_name }}"
+      state: started     
+  
