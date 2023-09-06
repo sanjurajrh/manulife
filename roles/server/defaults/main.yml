@@ -1,0 +1,76 @@
+# SPDX-License-Identifier: MIT
+---
+mssql_accept_microsoft_odbc_driver_17_for_sql_server_eula: false
+mssql_accept_microsoft_cli_utilities_for_sql_server_eula: false
+mssql_accept_microsoft_sql_server_standard_eula: false
+mssql_version:
+mssql_upgrade: false
+mssql_password:
+mssql_edition:
+mssql_tcp_port: 1433
+mssql_manage_firewall: false
+mssql_ip_address:
+mssql_enable_sql_agent:
+mssql_install_fts:
+mssql_install_powershell:
+mssql_tune_for_fua_storage:
+mssql_datadir:
+mssql_datadir_mode:
+mssql_logdir:
+mssql_logdir_mode:
+
+mssql_pre_input_sql_file: []
+mssql_post_input_sql_file: []
+mssql_pre_input_sql_content: []
+mssql_post_input_sql_content: []
+mssql_debug: false
+
+mssql_tls_enable:
+mssql_tls_cert:
+mssql_tls_private_key:
+mssql_tls_force: false
+mssql_tls_version: 1.2
+mssql_tls_remote_src: false
+mssql_tls_certificates: []
+
+mssql_rpm_key: https://packages.microsoft.com/keys/microsoft.asc
+mssql_server_repository: "{{ __mssql_server_repository }}"
+mssql_client_repository: "{{ __mssql_client_repository }}"
+
+mssql_ha_configure: false
+mssql_ha_ag_cluster_type: external
+# mssql_ha_replica_type must be set per host in inventory. Setting it hear to
+# avoid "variable not defined" error in Ansible
+mssql_ha_replica_type:
+mssql_ha_endpoint_port: 5022
+mssql_ha_cert_name:
+mssql_ha_private_key_password:
+mssql_ha_master_key_password:
+mssql_ha_reset_cert: false
+mssql_ha_endpoint_name:
+mssql_ha_ag_name:
+mssql_ha_db_names: []
+mssql_ha_login:
+mssql_ha_login_password:
+mssql_ha_virtual_ip:
+mssql_ha_cluster_run_role: false
+
+mssql_ad_configure: false
+mssql_ad_join: true
+mssql_ad_sql_user:
+mssql_ad_sql_password:
+# Default to CN={{ mssql_ad_sql_user }},CN=Users,DC=DOMAIN,DC=SUBDOMAIN...
+mssql_ad_sql_user_dn: >-
+  CN={{ mssql_ad_sql_user }},
+  CN=Users,
+  {{ ad_integration_realm.split(".")
+  | map("regex_replace", "^", "DC=")
+  | join(",") }}
+mssql_ad_keytab_file:
+mssql_ad_keytab_remote_src: false
+mssql_ad_kerberos_user: >-
+  {{ ad_integration_user if ad_integration_user is defined
+  else mssql_ad_sql_user }}
+mssql_ad_kerberos_password: >-
+  {{ ad_integration_password if ad_integration_user is defined
+  else mssql_ad_sql_password }}
