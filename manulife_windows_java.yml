@@ -2,12 +2,12 @@
 ## This Playbook Tested on Ansible Controller (tower)  Lab environment is DO417 ##
 ## Please Read below comments Before execute the playbook ##
 
-# Depended packages are available on git repo (jokin-jo/manulife.git)
+
 # This playbook Designed to execute on Windows Server 2016 host(s)
 # Make Sure all connection-related parameters(user permission, connection credentials..etc)  are set and  all hosts are reachable by Ansible 
 # Use below MSI packages should be downloaded and kept on the project directory if the Chocolaty repository is not available on the host(s)
-      #  dk-17.0.8_windows-x64_bin.msi  
-      #  jdk-20_windows-x64_bin.msi 
+      #  dk-17.0.8_windows-x64_bin.msi  (Download Link:  https://download.oracle.com/java/17/archive/jdk-17.0.8_windows-x64_bin.msi )
+      #  jdk-20_windows-x64_bin.msi  (Download Link: https://download.oracle.com/java/20/latest/jdk-20_windows-x64_bin.msi )
 
 
 - name: Middleware - Java Patching Windoes
@@ -30,6 +30,7 @@
  #     path: c:\jdk-17.0.8_windows-x64_bin.msi
  #     state: present
  #   register: jdk_verify
+ 
 
   - name: Install java depended package 
     win_chocolatey:
