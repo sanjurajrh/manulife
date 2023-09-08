@@ -1,4 +1,15 @@
 ---
+## This Playbook Tested on Ansible Controller (tower)  Lab environment is DO417 ##
+## Please Read below comments Before execute the playbook ##
+
+# Depended packages are available on git repo (jokin-jo/manulife.git)
+# This playbook Designed to execute on Windows Server 2016 host(s)
+# Make Sure all connection-related parameters(user permission, connection credentials..etc)  are set and  all hosts are reachable by Ansible 
+# Use below MSI packages should be downloaded and kept on the project directory if the Chocolaty repository is not available on the host(s)
+      #  dk-17.0.8_windows-x64_bin.msi  
+      #  jdk-20_windows-x64_bin.msi 
+
+
 - name: Middleware - Java Patching Windoes
   hosts: win1
 
@@ -8,39 +19,52 @@
       name: oracle17jdk
       state: present 
 
-  - name: Copy Java-JDK-file to Managed Hosts
-    win_copy: 
-      src: ./jdk-20_windows-x64_bin.msi
-      dest: c:\
+## Bellow Two tasks are optional install JDK package if the chocolaty repository is not available 
+ # - name: Copy Java-JDK-file to Managed Hosts
+ #  win_copy: 
+ #     src: ./jdk-17.0.8_windows-x64_bin.msi
+ #     dest: c:\
 
-  - name: Install Java 
-    win_package:
-      path: c:\jdk-20_windows-x64_bin.msi
-      state: present
-    register: jdk_verify
+ # - name: Install Java 
+ #   win_package:
+ #     path: c:\jdk-17.0.8_windows-x64_bin.msi
+ #     state: present
+ #   register: jdk_verify
 
-  - name: Verify the installation process
-    debug:
-      var: jdk_verify   
-
-  - win_chocolatey:
+  - name: Install java depended package 
+    win_chocolatey:
         name: procexp   
         state: present
+    register: app_name    
   
-  #patch Java-Jadk application 
+#patch Java-Jadk application 
 
   - name: Stop Java-Jdk Depended application 
     win_service:
-      name: "{{ service_name }}"
+      name: procexp
       state: stopped 
+    when: ansible_facts['distribution'] == "Microsoft Windows Server 2016 Core"
 
   - name: patch/update current package 
     win_chocolatey:
         name: jdk20 
         state: present 
+    register: result   
+
+## Bellow Two tasks are optional install JDK package if the chocolaty repository is not available 
+ # - name: Copy Java-JDK-file to Managed Hosts
+ #  win_copy: 
+ #     src: ./jdk-20_windows-x64_bin.msi
+ #     dest: c:\
+
+ # - name: Install Java 
+ #   win_package:
+ #     path: c:\jdk-20_windows-x64_bin.msi
+ #     state: present
+ #   register: result 
 
   - name: Restart Java-Jdk Depended application 
     win_service:
       name: "{{ service_name }}"
-      state: started     
-  
+      state: started 
+    when: result is succeeded  
