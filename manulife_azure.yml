@@ -1,35 +1,47 @@
+---
+## This Playbook Tested on Ansible Controller (tower)  Lab environment is DO467 ##
+## Please Read below comments Before execute the playbook ##
+
+# This playbook Designed to execute on azure coud space 
+# Make Sure all connection-related parameters( subscription ID, Client Secret, Tenant ID ) 
+# Use appropriate values for variables which is defined on this playbook 
+
+## Run this Playbook if there is no existing Virtual Machine is available 
+
+
+
 - name: Create Azure VM
   hosts: localhost
   connection: local
   tasks:
   - name: Create resource group
     azure_rm_resourcegroup:
-      name: myResourceGroup
-      location: eastus
+      name: "{{ resource_group_name }}"
+      location: "{{ location }}"
   - name: Create virtual network
     azure_rm_virtualnetwork:
-      resource_group: myResourceGroup
-      name: myVnet
+      resource_group: "{{ resource_group_name }}"
+      name: "{{ v_network }}"
       address_prefixes: "10.0.0.0/16"
   - name: Add subnet
     azure_rm_subnet:
-      resource_group: myResourceGroup
-      name: mySubnet
+      resource_group: "{{ resource_group_name }}"
+      name: "{{ submet }}"
       address_prefix: "10.0.1.0/24"
-      virtual_network: myVnet
+      virtual_network: "{{ v_network }}"
   - name: Create public IP address
     azure_rm_publicipaddress:
-      resource_group: myResourceGroup
+      resource_group: "{{ resource_group_name }}"
       allocation_method: Static
-      name: myPublicIP
+      name: "{{ publicip }}"
     register: output_ip_address
   - name: Public IP of VM
     debug:
       msg: "The public IP is {{ output_ip_address.state.ip_address }}."
   - name: Create Network Security Group that allows SSH
     azure_rm_securitygroup:
-      resource_group: myResourceGroup
-      name: myNetworkSecurityGroup
+      resource_group: "{{ resource_group_name }}"
+      name: "{{ NetworkSecurityGroup }}"
       rules:
         - name: SSH
           protocol: Tcp
@@ -39,19 +51,19 @@
           direction: Inbound
   - name: Create virtual network interface card
     azure_rm_networkinterface:
-      resource_group: myResourceGroup
-      name: myNIC
-      virtual_network: myVnet
-      subnet: mySubnet
-      public_ip_name: myPublicIP
-      security_group: myNetworkSecurityGroup
+      resource_group: "{{ resource_group_name }}"
+      name: "{{ NIC }}"
+      virtual_network: "{{ v_network }}"
+      subnet: "{{ submet }}"
+      public_ip_name: "{{ publicip }}"
+      security_group: "{{ NetworkSecurityGroup }}"
   - name: Create VM
     azure_rm_virtualmachine:
-      resource_group: myResourceGroup
-      name: myVM
-      vm_size: Standard_DS1_v2
-      admin_username: azureuser
-      admin_password: redhat123@!
+      resource_group: "{{ resource_group_name }}"
+      name: "{{ vm_name }}"
+      vm_size: {{ vm_size }}
+      admin_username: "{{ admin_user }}"
+      admin_password: "{{ admin_pswd }}"
       image:
         offer: "RHEL"
         publisher: "RedHat"
