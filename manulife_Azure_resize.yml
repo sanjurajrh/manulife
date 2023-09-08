@@ -1,12 +1,20 @@
 ---
+## This Playbook Tested on Ansible Controller (tower)  Lab environment is DO467 ##
+## Please Read below comments Before execute the playbook ##
+
+# This playbook Designed to execute on azure coud space 
+# Make Sure all connection-related parameters( subscription ID, Client Secret, Tenant ID ) 
+# Use appropriate values for variables which is defined on this playbook 
+
   - name: Change VM size
     hosts: localhost
     vars:
        resource_group_name: myResourceGroup
        vm_name: myVM
-       your_username: azureuser
-       your_password: redhat123@!
+       admin_user: azureuser
+       admin_pswd: redhat123@!
        azure_disk_size: 40
+       vm_size: Small-ExtraLarge
     
     tasks:
     
@@ -17,18 +25,18 @@
         allocated: no
     
     
-    - name: Update VM
-      azure_rm_virtualmachine:
-        resource_group: "{{ resource_group_name }}"
-        name: "{{vm_name}}"
-        vm_size: Standard_DS2_v2
-        admin_username: "{{ your_username }}"
-        admin_password: "{{ your_password }}"
-        started: yes
-
-    - name: "Increase disk size"
+    - name: "Increase disk size of Virtual Machine"
       azure_rm_managed_disk:
         name: "{{ vm_name }}"
         resource_group: "{{ resource_group_name }}"
         disk_size_gb: "{{ azure_disk_size }}"
         managed_by: "{{ vm_name }}"
+
+    - name: "Resize amd Update the virtual Machine and Start"
+      azure_rm_virtualmachine:
+        resource_group: "{{ resource_group_name }}"
+        name: "{{vm_name}}"
+        vm_size: {{ vm_size }}
+        admin_username: "{{ admin_user }}"
+        admin_password: "{{ admin_pswd }}"
+        started: yes
