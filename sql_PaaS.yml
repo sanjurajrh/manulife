@@ -24,8 +24,8 @@
         resource_group: "{{resourcegroup}}"
         server_name: "{{sqlserver}}"
         name: 'Allow_Specific_Range'
-        start_ip_address: '10.0.0.1' # start of your allowed IP range
-        end_ip_address: '10.0.0.255' # end of your allowed IP range
+        start_ip_address: '15.0.0.1' # start of your allowed IP range
+        end_ip_address: '15.0.0.255' # end of your allowed IP range
       register: firewall_result
     - debug:
         var: firewall_result
