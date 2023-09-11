@@ -19,13 +19,14 @@
         resource_group: "{{resourcegroup}}"
         server_name: "{{sqlserver}}"
       name: "Create Azure SQL Database"
-    - azure_rm_sqlfirewallrule: 
-        end_ip_address: "166.897.83.25"
-        name: AzurePublicPeeringIrving
-        resource_group: "{{resourcegroup}}"
-        server_name: "{{sqlserver}}"
-        start_ip_address: "166.897.83.24"
-      name: "Create Azure Firewall Rule"
+    - name: Create contained user mapped to Azure AD identity
+      win_shell: >
+       sqlcmd -S {{ sqlserver }}.database.windows.net 
+              -d {{ sqldb }} 
+              -U {{ admin }} 
+              -P {{ password }} 
+              -Q "CREATE USER [{{ azure_ad_username }}] FROM EXTERNAL PROVIDER;"
+      register: result
   vars: 
     admin: student
     location: eastus
@@ -33,3 +34,4 @@
     resourcegroup: manulife_test_1
     sqldb: manulife_db  
     sqlserver: manulifesqlserver
+    azure_ad_username: alex
