@@ -1,16 +1,37 @@
 ---
-- name: Azure SQL Database Hardening
-  hosts: localhost
-  connection: local
-  gather_facts: no
-  tasks:
-
-  - name: Get details of Azure SQL Database
-    azure_rm_sqldatabase_info:
-      resource_group: manulife_test
-      server_name: manulife.database.windows.net
-    register: sqldb_info
-
-  - name: Test the teach
-    debug:
-      var: sqldb_info
+--- 
+- 
+- hosts: localhost
+  tasks: 
+    
+    - azure_rm_resourcegroup: 
+        location: "{{location}}"
+        name: "{{resourcegroup}}"
+        name: "Create Azure resource group"
+     
+    - azure_rm_sqlserver: 
+        admin_password: "{{password}}"
+        admin_username: "{{admin}}"
+        name: "{{sqlserver}}"
+        resource_group: "{{resourcegroup}}"
+        version: "12.0"
+        name: "Create Azure SQL Server Logical host"
+    - azure_rm_sqldatabase: 
+        name: "{{sqldb}}"
+        resource_group: "{{resourcegroup}}"
+        server_name: "{{sqlserver}}"
+        name: "Create Azure SQL Database"
+    - azure_rm_sqlfirewallrule: 
+        end_ip_address: "166.897.83.25"
+        name: AzurePublicPeeringIrving
+        resource_group: "{{resourcegroup}}"
+        server_name: "{{sqlserver}}"
+        start_ip_address: "166.897.83.24"
+        name: "Create Azure Firewall Rule"
+  vars: 
+    admin: admin
+    location: eastus
+    password: "RedHat123@!"
+    resourcegroup: manulife_test
+    sqldb: manulife_db  
+    sqlserver: manulife_sql_server
