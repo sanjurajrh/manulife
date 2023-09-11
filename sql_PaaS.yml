@@ -27,7 +27,7 @@
         start_ip_address: "166.897.83.24"
       name: "Create Azure Firewall Rule"
   vars: 
-    admin: admin
+    admin: student
     location: eastus
     password: "RedHat123@!"
     resourcegroup: manulife_test_1
