@@ -30,6 +30,6 @@
     admin: admin
     location: eastus
     password: "RedHat123@!"
-    resourcegroup: manulife_test
+    resourcegroup: manulife_test_1
     sqldb: manulife_db  
     sqlserver: manulife_sql_server
