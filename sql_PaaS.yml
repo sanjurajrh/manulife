@@ -19,14 +19,15 @@
         resource_group: "{{resourcegroup}}"
         server_name: "{{sqlserver}}"
       name: "Create Azure SQL Database"
-    - name: Create contained user mapped to Azure AD identity
-      command: >
-       sqlcmd -S {{ sqlserver }}.database.windows.net 
-              -d {{ sqldb }} 
-              -U {{ admin }} 
-              -P {{ password }} 
-              -Q "CREATE USER [{{ azure_ad_username }}] FROM EXTERNAL PROVIDER;"
-      register: result
+    - name: Configure Azure SQL Server firewall
+      azure_rm_sqlfirewallrule:
+        resource_group: 'your_resource_group'
+        server_name: 'your_sql_server_name'
+        name: 'Allow_Specific_Range'
+        start_ip_address: '10.0.0.1' # start of your allowed IP range
+        end_ip_address: '10.0.0.255' # end of your allowed IP range
+      register: firewall_result
+
   vars: 
     admin: student
     location: eastus
