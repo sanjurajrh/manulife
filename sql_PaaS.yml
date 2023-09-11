@@ -20,7 +20,7 @@
         server_name: "{{sqlserver}}"
       name: "Create Azure SQL Database"
     - name: Create contained user mapped to Azure AD identity
-      win_shell: >
+      command: >
        sqlcmd -S {{ sqlserver }}.database.windows.net 
               -d {{ sqldb }} 
               -U {{ admin }} 
