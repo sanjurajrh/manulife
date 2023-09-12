@@ -11,5 +11,5 @@
       namespace: "your-service-bus-namespace"
       name: "your-topic-name"
       default_message_time_to_live_seconds: "P60D"
-      auto_delete_on_idle_in_seconds: "P10675199DT2H48M5.4775807S" # This represents "Never" using a duration format
+      auto_delete_on_idle_in_seconds: "0" # This represents "Never" using a duration format
       state: "present"
