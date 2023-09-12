@@ -1,0 +1,16 @@
+---
+- name: Manage Azure Service Bus Topics and Queues
+  hosts: localhost
+  gather_facts: no
+  collections:
+  - azure.azcollection
+  tasks:
+  - name: Create a Service Bus Topic
+    azure_rm_servicebustopic:
+      resource_group: "your-resource-group"
+      namespace_name: "your-service-bus-namespace"
+      name: "your-topic-name"
+      default_message_time_to_live: "P60D"
+      auto_delete_on_idle: "P10675199DT2H48M5.4775807S" # This represents "Never" using a duration format
+      duplicate_detection_history_time_window: "PT10M"
+      state: "present"
