@@ -1,0 +1,10 @@
+---
+- name: Test sqmcmd
+  hosts: localhost
+  tasks:
+    - name: Test sqlcmd
+      shell: sqlcmd --version
+      register: version
+    - name: Print the version
+      debug: 
+        var: version
