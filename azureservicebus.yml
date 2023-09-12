@@ -10,5 +10,4 @@
       resource_group: "your-resource-group"
       namespace: "your-service-bus-namespace"
       name: "your-topic-name"
-      default_message_time_to_live_seconds: "P60D"
       state: "present"
