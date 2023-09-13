@@ -1,14 +1,14 @@
 ---
-- Create a resourcegroup
+- name: Create a resourcegroup
   hosts: localhost
   gather_facts: no
   collections: 
   - azure.azcollection
   tasks:
   - name: Create a resource group
-  azure_rm_resourcegroup:
-    name: myresourcegroup
-    location: eastus2
+    azure_rm_resourcegroup:
+      name: myresourcegroup
+      location: eastus2
 #- name: Manage Azure Service Bus Topics and Queues
 #  hosts: localhost
 #  gather_facts: no
