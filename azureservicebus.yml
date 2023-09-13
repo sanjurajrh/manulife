@@ -8,7 +8,7 @@
   - name: Create a resource group
   azure_rm_resourcegroup:
     name: myresourcegroup
-    location: eastus
+    location: eastus2
 #- name: Manage Azure Service Bus Topics and Queues
 #  hosts: localhost
 #  gather_facts: no
