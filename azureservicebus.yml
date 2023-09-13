@@ -1,6 +1,9 @@
 ---
 - hosts: localhost
   connection: local
+  vars:
+    name: myresourcegroup
+    location: eastus2
   tasks:
     - name: Creating resource group - "{{ name }}"
       azure_rm_resourcegroup:
