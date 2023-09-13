@@ -1,23 +1,11 @@
 ---
-- name: Create a resourcegroup
-  hosts: localhost
-  gather_facts: no
-  collections: 
-  - azure.azcollection
+- hosts: localhost
+  connection: local
   tasks:
-  - name: Create a resource group
-    azure_rm_resourcegroup:
-      name: myresourcegroup
-      location: eastus2
-#- name: Manage Azure Service Bus Topics and Queues
-#  hosts: localhost
-#  gather_facts: no
-#  collections:
-#  - azure.azcollection
-#  tasks:
-#  - name: Create a Service Bus Topic
-#   azure_rm_servicebustopic:
-#      resource_group: "your-resource-group"
-#      namespace: "your-service-bus-namespace"
-#      name: "your-topic-name"
-#      state: "present"
+    - name: Creating resource group - "{{ name }}"
+      azure_rm_resourcegroup:
+        name: "{{ name }}"
+        location: "{{ location }}"
+      register: rg
+    - debug:
+        var: rg
